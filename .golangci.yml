@@ -1,0 +1,144 @@
+linters-settings:
+  depguard:
+    list-type: denylist
+    packages:
+      - github.com/sirupsen/logrus
+    packages-with-error-message:
+      - github.com/sirupsen/logrus: "logging is allowed only by zerolog"
+    rules:
+      logger:
+        deny:
+          - pkg: "github.com/sirupsen/logrus"
+            desc: logging is allowed only by zerolog
+  dupl:
+    threshold: 100
+  funlen:
+    lines: -1 # the number of lines (code + empty lines) is not a right metric and leads to code without empty line or one-liner.
+    statements: 100
+  goconst:
+    min-len: 2
+    min-occurrences: 3
+  gocritic:
+    enabled-tags:
+      - diagnostic
+      - experimental
+      - opinionated
+      - performance
+      - style
+    disabled-checks:
+      - dupImport # https://github.com/go-critic/go-critic/issues/845
+      - ifElseChain
+      - octalLiteral
+      - whyNoLint
+  goheader:
+    template: |-
+      // Copyright 2023 AdvantISS, LLC. or its affiliates.
+      // All Rights Reserved.
+      //
+      // This Source Code Form is subject to the terms of the Mozilla Public
+      // License, v. 2.0. If a copy of the MPL was not distributed with this
+      // file, You can obtain one at http://mozilla.org/MPL/2.0/.
+  gocyclo:
+    min-complexity: 20
+  goimports:
+    local-prefixes: github.com/advantiss/cloudreef
+  gomnd:
+    checks:
+      - argument
+      - case
+      - condition
+      - return
+    ignored-numbers:
+      - '0'
+      - '1'
+      - '2'
+      - '3'
+    ignored-functions:
+      - strings.SplitN
+  revive:
+    severity: error
+    confidence: 0.1
+    rules:
+      - name: var-naming
+        disabled: true
+
+  govet:
+    check-shadowing: true
+  lll:
+    line-length: 240
+  misspell:
+    locale: US
+  nolintlint:
+    allow-unused: false
+    require-explanation: false
+    require-specific: false
+
+linters:
+  disable-all: true
+  enable:
+    - bodyclose
+    - depguard
+    - dogsled
+    - dupl
+    - errcheck
+    - exportloopref
+    - funlen
+    - gochecknoinits
+    - goconst
+    - gocritic
+    - gocyclo
+    - gofmt
+    - goimports
+    - gomnd
+    - goprintffuncname
+    - gosec
+    - gosimple
+    - govet
+    - ineffassign
+    - lll
+    - misspell
+    - nakedret
+    - noctx
+    - nolintlint
+    - revive
+    - staticcheck
+    - stylecheck
+    - typecheck
+    - unconvert
+    - unparam
+    - unused
+    - whitespace
+
+  # don't enable:
+  # - asciicheck
+  # - scopelint
+  # - gochecknoglobals
+  # - gocognit
+  # - godot
+  # - godox
+  # - goerr113
+  # - interfacer
+  # - maligned
+  # - nestif
+  # - prealloc
+  # - testpackage
+  # - wsl
+
+issues:
+  exclude-rules:
+    - path: _test\.go
+      linters:
+        - gomnd
+        - dupl
+        - goconst
+    - linters:
+        - stylecheck
+      text: "ST1003:"
+
+run:
+  timeout: 5m
+  go: '1.20'
+  skip-dirs:
+    - node_modules
+    - imports
+    - platform/utility/cdk/imports
